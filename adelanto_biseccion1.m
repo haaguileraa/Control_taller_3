@@ -1,9 +1,12 @@
 % diseño del controlador de adelanto por el metodo de biseccion
+ep = 0.1/100;
+PMD=45;
+kp=(1/ep)-1;
 
+k = kp*5; %ep < 0.1% 
 PMD =45;
-%G = zpk([],[-1 -3],2);
 G= zpk([],[-1 -10], [2])
-k = 100
+
 L1 = k*G;
 
 
@@ -13,7 +16,7 @@ L1 = k*G;
 [GM, PM1, wg180, wg] = margin (L1);
 % lineas de correccion de la fase que da octave, no es necesario en matlab
 if abs(PM1) > 180
-    PM1 = PM1-360
+    PM1 = PM1-360;
 end
 
 
@@ -26,7 +29,7 @@ T1 = 1/(wg*sqrt(alfa1));
 C1 = tf([alfa1*T1 1],[T1 1]);
 [GM, PM1, wg180, wg1] = margin (C1*L1);
 if abs(PM1) > 180
-    PM1 = PM1-360
+    PM1 = PM1-360;
 end
 
 f_alfa1 = PMD-PM1;
@@ -36,7 +39,7 @@ C2 = tf([alfa2*T2 1],[T2 1]);
 [GM2, PM2, wg180, wg2] = margin(C2*L1);
 
 if abs(PM2) > 180
-    PM2 = PM2-360
+    PM2 = PM2-360;
 end
 
 if PMD - PM2 > 0
@@ -64,7 +67,18 @@ for i = 1:40
    end
 end
 
-
+figure(1)
 margin(CF*L1) % verificacion de las condiciones
+
+e=1/(1+CF*L1)
+figure(5)
+step(e)
+title('error')
+grid on
+
+
+[epf, t] = step(e,5000);
+
+ep_dc=dcgain(e)
 
 

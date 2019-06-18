@@ -21,43 +21,33 @@ k = 1/(C1g*Gg);
 
 C = k*C1;
 
-L1 = C*G;
+L = C*G;
 
-margin(L1)
-
-
-
-
-%%
-L1=k*G;
-
-
+figure(1)
+margin(k*G) 
+%title('Bode L1=k*G(S)')
+grid on
+%hold all
+figure(2)
+margin(L)
+%title('Bode L=k*C1(S)*G(S)')
 grid on
 
-[Gm, Pm, w180, wg] = margin(L1)
+T=feedback(L,1)
 
-%%
-
-L=k*C*G
-T=feedback(T)
-bode(L1)
-bode(L)
+figure(3)
 bode(T)
+title('Bode T')
+grid on
+
+figure(4)
+step(T)
+title('Step T')
+grid on
 
 
-
-%% 2 Adelanto
-%clear
-%clc
-ep=0.1/100;
-%PMD
-
-
-%% 3 Atraso
-clear
-clc
-ep=0.1/100;
-%PMD
-
-
-
+e=1/(1+C*G)
+figure(5)
+step(e)
+title('error')
+grid on
