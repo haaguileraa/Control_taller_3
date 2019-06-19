@@ -1,11 +1,12 @@
+clear
+clc
 ep = 0.1/100;
 PMD=45;
 kp=(1/ep)-1;
-
-%1
+%
 k = kp*5; %ep < 0.1% 
 PMD =45;
-G= zpk([],[-1 -10], [2])
+G= zpk([],[-1 -10], [2]);
 
 L1 = k*G;
 
@@ -19,32 +20,40 @@ grid on
 
 %% 3
 L1_a = PMD-180+5.7;
-
 %por metodo grafico, la frecuencia w'g
-wpg=10.2;
+%wprima_g=10.2;
+
 
 %si se desea el valor exacto:
-wgg=0;
-[L1m, L1a] = bode(L1,wgg);
-for i=0:0.01:15
-    want=0;
+wgp=0;
+[L1m, L1a] = bode(L1,wgp);
+for wgp=0:0.01:15
     if L1a ~= L1_a
-        wgg = want + i;
-        [L1m, L1a] = bode(L1,wgg);
+        [L1m, L1a] = bode(L1,wgp);
     end
-    if -L1a + L1_a > 0 %&& L1a <= L1_a*1.1
+    if -L1a + L1_a > 0 
+        %se obtiene A para w'g y se confirma que L1a satisfaga
+        % L1a = PMD-180+5.7 acá se obtiene una diferencia de 
+        %0.0237 grados debida al tamaño de aumento de i 
+       [L1m, L1a] = bode(L1,wgp)
        break 
     end
-
 end
-    %%
-for wgg =0:500
-        [L1m, L1a] = bode(L1,wgg);
-        if L1a == L1_a
-            wgg = wgg
-            break
-        end
-    end 
+%% 4 
+A=20*log10(L1m) 
+alpha = 10^-(A/20)
 
+%alternativamente
+alpha2 = 1/abs(freqresp(L1,wgp,'rad/s'))
+%% 5
+T1=10/(alpha*wgp)
+
+
+
+%% Pruebas obtención de alpha
+
+z=i*wgp;
+ele1 = k*2/((z+1)*(z+10))
+alp = 1/abs(ele1)
 
 
