@@ -75,6 +75,7 @@ step(T)
 title('Step T')
 grid on
 
+%% error
 
 e=1/(1+C*G)
 figure(5)
@@ -83,7 +84,9 @@ title('error')
 grid on
 
 
+[epf, t] = step(e,5000);
 
+ep_dc=dcgain(e)
 
 
 
